@@ -3,16 +3,13 @@
 // 把这几个值传给这个接口，由服务端创建 Stripe Checkout 会话并返回跳转链接。
 // Stripe 密钥只存在于这里（Vercel 环境变量），永远不会出现在浏览器里。
 //
-// 同样改用 Web 标准 Request/Response 写法，和 stripe-webhook.js 保持一致。
+// 同样改用"按方法命名导出"(export async function POST)，和 stripe-webhook.js 保持一致，
+// 这是 Vercel 官方认可的 Web 标准 Request/Response 写法。
 
 import Stripe from 'stripe';
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-export default async function handler(request) {
-  if (request.method !== 'POST') {
-    return Response.json({ error: 'method_not_allowed' }, { status: 405 });
-  }
-
+export async function POST(request) {
   try {
     const body = await request.json();
     const { order_id, access_token, total_cents, email, site_url } = body || {};
