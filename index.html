@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobalMart 全球购 | Cross-Border Shop</title>
+<style>
+:root {
+  --primary: #1a1a2e;
+  --accent: #e94560;
+  --accent2: #0f3460;
+  --gold: #f5a623;
+  --light: #f8f9fa;
+  --muted: #6c757d;
+  --border: #e0e0e0;
+  --success: #28a745;
+  --card-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --radius: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #f5f5f7; color: #1a1a1a; }
+
+/* Nav */
+.nav { background: var(--primary); color: #fff; padding: 0 24px; display: flex; align-items: center; gap: 16px; height: 60px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+.nav-logo { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+.nav-logo span { color: var(--accent); }
+.nav-search { flex: 1; max-width: 420px; display: flex; background: rgba(255,255,255,0.12); border-radius: 8px; overflow: hidden; }
+.nav-search input { flex: 1; background: none; border: none; padding: 8px 14px; color: #fff; font-size: 14px; outline: none; }
+.nav-search input::placeholder { color: rgba(255,255,255,0.5); }
+.nav-search button { background: var(--accent); border: none; padding: 8px 14px; color: #fff; cursor: pointer; font-size: 14px; }
+.nav-actions { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.lang-btn { background: none; border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+.lang-btn:hover { background: rgba(255,255,255,0.1); }
+.cart-btn { background: var(--accent); border: none; color: #fff; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; font-size: 14px; transition: all 0.2s; }
+.cart-btn:hover { background: #d63651; }
+.cart-count { background: var(--gold); color: #000; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+.admin-btn { background: none; border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+.admin-btn:hover { background: rgba(255,255,255,0.1); }
+
+/* Hero */
+.hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent2) 100%); color: #fff; text-align: center; padding: 60px 24px; }
+.hero h1 { font-size: clamp(28px,5vw,48px); font-weight: 700; margin-bottom: 12px; }
+.hero h1 span { color: var(--gold); }
+.hero p { font-size: 16px; opacity: 0.85; max-width: 560px; margin: 0 auto 28px; line-height: 1.6; }
+.hero-badges { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 13px; }
+
+/* Categories */
+.categories { background: #fff; border-bottom: 1px solid var(--border); padding: 0 24px; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+.categories::-webkit-scrollbar { display: none; }
+.cat-btn { background: none; border: none; padding: 14px 16px; cursor: pointer; font-size: 14px; color: var(--muted); white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.2s; }
+.cat-btn.active, .cat-btn:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* Main */
+.main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.section-title { font-size: 22px; font-weight: 700; }
+.view-all { color: var(--accent); font-size: 14px; cursor: pointer; text-decoration: none; }
+
+/* Product Grid */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; }
+.product-card { background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: var(--card-shadow); transition: all 0.25s; cursor: pointer; }
+.product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+.product-img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 56px; }
+.product-info { padding: 14px; }
+.product-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.product-name-en { font-size: 12px; color: var(--muted); margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.product-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.product-price { font-size: 18px; font-weight: 700; color: var(--accent); }
+.product-price small { font-size: 12px; font-weight: 400; color: var(--muted); display: block; }
+.add-cart { background: var(--primary); color: #fff; border: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; transition: background 0.2s; }
+.add-cart:hover { background: var(--accent); }
+.product-badge { background: var(--accent); color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
+.stock-low { background: var(--gold); color: #000; }
+.rating { font-size: 12px; color: var(--gold); margin-bottom: 4px; }
+
+/* Payment logos */
+.payment-bar { background: #fff; border-top: 1px solid var(--border); padding: 20px 24px; text-align: center; }
+.payment-bar p { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+.payment-logos { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; }
+.pay-logo { background: var(--light); border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; color: var(--primary); }
+.pay-logo.stripe { color: #6772e5; }
+.pay-logo.paypal { color: #003087; }
+.pay-logo.alipay { color: #1677ff; }
+.pay-logo.crypto { color: #f7931a; }
+
+/* MODAL OVERLAY */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; display: none; align-items: center; justify-content: center; padding: 16px; }
+.overlay.open { display: flex; }
+.modal { background: #fff; border-radius: 14px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; padding: 28px; position: relative; }
+.modal-close { position: absolute; top: 16px; right: 16px; background: var(--light); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+.modal h2 { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+.modal-product-img { font-size: 80px; text-align: center; margin-bottom: 16px; }
+.modal-price { font-size: 26px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+.modal-desc { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+.qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.qty-btn { background: var(--light); border: 1px solid var(--border); width: 34px; height: 34px; border-radius: 8px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+.qty-display { font-size: 18px; font-weight: 600; min-width: 30px; text-align: center; }
+.btn-primary { background: var(--accent); color: #fff; border: none; width: 100%; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.btn-primary:hover { background: #d63651; }
+.btn-secondary { background: var(--primary); color: #fff; border: none; width: 100%; padding: 14px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: background 0.2s; }
+
+/* Cart */
+.cart-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.cart-item-img { font-size: 36px; width: 50px; text-align: center; }
+.cart-item-info { flex: 1; }
+.cart-item-name { font-size: 14px; font-weight: 600; }
+.cart-item-price { font-size: 13px; color: var(--accent); margin-top: 2px; }
+.cart-item-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 18px; padding: 4px 8px; }
+.cart-item-remove:hover { color: var(--accent); }
+.cart-qty-ctrl { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.cart-qty-btn { background: var(--light); border: 1px solid var(--border); width: 24px; height: 24px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+.cart-total { background: var(--light); border-radius: 10px; padding: 16px; margin: 16px 0; }
+.cart-total-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; color: var(--muted); }
+.cart-total-final { display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; }
+
+/* Checkout */
+.form-group { margin-bottom: 16px; }
+.form-label { font-size: 13px; font-weight: 600; color: var(--muted); display: block; margin-bottom: 6px; }
+.form-input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; font-family: inherit; }
+.form-input:focus { border-color: var(--accent); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pay-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.pay-method { border: 2px solid var(--border); border-radius: 10px; padding: 12px; cursor: pointer; text-align: center; transition: all 0.2s; }
+.pay-method:hover { border-color: var(--accent); }
+.pay-method.selected { border-color: var(--accent); background: #fff5f7; }
+.pay-method-name { font-size: 13px; font-weight: 600; margin-top: 4px; }
+.pay-method-icon { font-size: 24px; }
+.pay-note { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 16px; line-height: 1.5; }
+
+/* Success */
+.success-icon { font-size: 64px; text-align: center; margin: 20px 0 10px; }
+.success-title { text-align: center; font-size: 22px; font-weight: 700; margin-bottom: 8px; color: var(--success); }
+.success-sub { text-align: center; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.order-info { background: var(--light); border-radius: 10px; padding: 16px; margin: 20px 0; font-size: 14px; }
+.order-row { display: flex; justify-content: space-between; padding: 4px 0; }
+
+/* Admin Panel */
+.admin-modal { max-width: 700px; }
+.admin-tabs { display: flex; gap: 6px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+.admin-tab { background: none; border: none; padding: 10px 16px; cursor: pointer; font-size: 14px; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.admin-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.product-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.product-table th { background: var(--light); padding: 10px 12px; text-align: left; font-weight: 600; font-size: 12px; color: var(--muted); }
+.product-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.product-table tr:hover td { background: #fafafa; }
+.edit-btn { background: var(--primary); color: #fff; border: none; padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; margin-right: 4px; }
+.del-btn { background: var(--accent); color: #fff; border: none; padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; }
+.stat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat-card { background: var(--light); border-radius: 10px; padding: 16px; text-align: center; }
+.stat-num { font-size: 26px; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.orders-list { max-height: 300px; overflow-y: auto; }
+.order-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.order-status { padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+.status-paid { background: #d4edda; color: #155724; }
+.status-pending { background: #fff3cd; color: #856404; }
+.select-input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; font-family: inherit; }
+.textarea-input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; font-family: inherit; resize: vertical; min-height: 80px; }
+
+/* Toast */
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--primary); color: #fff; padding: 12px 20px; border-radius: 10px; font-size: 14px; z-index: 999; transform: translateY(100px); opacity: 0; transition: all 0.3s; box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* Footer */
+footer { background: var(--primary); color: rgba(255,255,255,0.7); text-align: center; padding: 32px 24px; font-size: 13px; line-height: 2; }
+footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+footer strong { color: #fff; }
+
+@media (max-width: 600px) {
+  .nav-search { display: none; }
+  .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .form-row { grid-template-columns: 1fr; }
+  .stat-cards { grid-template-columns: repeat(3, 1fr); }
+  .pay-methods { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">Global<span>Mart</span> 全球购</div>
+  <div class="nav-search">
+    <input type="text" id="searchInput" placeholder="搜索商品 / Search products..." oninput="filterProducts()">
+    <button onclick="filterProducts()">🔍</button>
+  </div>
+  <div class="nav-actions">
+    <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
+    <button class="admin-btn" onclick="openAdmin()">⚙️ <span data-key="admin">管理</span></button>
+    <button class="cart-btn" onclick="openCart()">
+      🛒 <span data-key="cart">购物车</span> <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1 data-key="heroTitle">全球好货 · <span>直达您手</span></h1>
+  <p data-key="heroSub">正品保障 · 全球配送 · 多种支付方式 · 7天无理由退换<br>Authentic goods · Global shipping · Multiple payment methods</p>
+  <div class="hero-badges">
+    <span class="badge">🔒 SSL 安全支付</span>
+    <span class="badge">✈️ 全球配送 Global Shipping</span>
+    <span class="badge">💳 Stripe · PayPal · 支付宝 · Crypto</span>
+    <span class="badge">⭐ 10,000+ 好评</span>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="categories" id="categories"></div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="section-header">
+    <div class="section-title" data-key="featuredTitle">🔥 热门商品 Featured Products</div>
+  </div>
+  <div class="product-grid" id="productGrid"></div>
+</div>
+
+<!-- PAYMENT BAR -->
+<div class="payment-bar">
+  <p data-key="payTitle">安全支付方式 · Secure Payment Methods</p>
+  <div class="payment-logos">
+    <div class="pay-logo stripe">💳 Stripe</div>
+    <div class="pay-logo paypal">🅿️ PayPal</div>
+    <div class="pay-logo alipay">🔵 支付宝 Alipay</div>
+    <div class="pay-logo crypto">₿ Crypto (USDT/BTC/ETH)</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>GlobalMart 全球购</strong><br>
+  跨境电商全流程解决方案 · Full Cross-Border E-Commerce Solution<br>
+  <small>© 2024 GlobalMart · 支持 Stripe · PayPal · 支付宝 · 加密货币</small>
+</footer>
+
+<!-- ====== MODALS ====== -->
+
+<!-- Product Detail Modal -->
+<div class="overlay" id="productModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('productModal')">✕</button>
+    <div class="modal-product-img" id="modalEmoji"></div>
+    <div id="modalBadge"></div>
+    <h2 id="modalName"></h2>
+    <div id="modalNameEn" style="color:#6c757d;font-size:13px;margin-bottom:8px;"></div>
+    <div class="modal-price" id="modalPrice"></div>
+    <p class="modal-desc" id="modalDesc"></p>
+    <div class="qty-row">
+      <span style="font-size:14px;font-weight:600;" data-key="qty">数量:</span>
+      <button class="qty-btn" onclick="changeQty(-1)">−</button>
+      <div class="qty-display" id="qtyDisplay">1</div>
+      <button class="qty-btn" onclick="changeQty(1)">+</button>
+    </div>
+    <button class="btn-primary" onclick="addToCartFromModal()" data-key="addCart">🛒 加入购物车 Add to Cart</button>
+    <button class="btn-secondary" onclick="buyNow()" data-key="buyNow">⚡ 立即购买 Buy Now</button>
+  </div>
+</div>
+
+<!-- Cart Modal -->
+<div class="overlay" id="cartModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('cartModal')">✕</button>
+    <h2 data-key="cartTitle">🛒 购物车 Shopping Cart</h2>
+    <div id="cartItems"></div>
+    <div class="cart-total" id="cartTotal"></div>
+    <button class="btn-primary" onclick="openCheckout()" data-key="checkout">去结账 Checkout →</button>
+  </div>
+</div>
+
+<!-- Checkout Modal -->
+<div class="overlay" id="checkoutModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('checkoutModal')">✕</button>
+    <h2 data-key="checkoutTitle">📦 填写订单 Checkout</h2>
+
+    <div class="form-group">
+      <label class="form-label" data-key="receiver">收件人 / Receiver</label>
+      <input class="form-input" id="receiverName" placeholder="Full Name 姓名">
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-key="email">邮箱 / Email</label>
+      <input class="form-input" id="receiverEmail" type="email" placeholder="email@example.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-key="phone">手机 / Phone</label>
+      <input class="form-input" id="receiverPhone" placeholder="+1 / +86 ...">
+    </div>
+    <div class="form-group">
+      <label class="form-label" data-key="address">收货地址 / Shipping Address</label>
+      <input class="form-input" id="receiverAddr" placeholder="Country, City, Street...">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">City</label>
+        <input class="form-input" id="receiverCity" placeholder="City">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Zip Code</label>
+        <input class="form-input" id="receiverZip" placeholder="Postal Code">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" data-key="payMethod">支付方式 / Payment Method</label>
+      <div class="pay-methods" id="payMethods">
+        <div class="pay-method selected" data-pay="stripe" onclick="selectPay(this,'stripe')">
+          <div class="pay-method-icon">💳</div>
+          <div class="pay-method-name">Stripe</div>
+          <small style="color:#6c757d;font-size:11px;">信用卡 Credit Card</small>
+        </div>
+        <div class="pay-method" data-pay="paypal" onclick="selectPay(this,'paypal')">
+          <div class="pay-method-icon">🅿️</div>
+          <div class="pay-method-name">PayPal</div>
+          <small style="color:#6c757d;font-size:11px;">国际通用</small>
+        </div>
+        <div class="pay-method" data-pay="alipay" onclick="selectPay(this,'alipay')">
+          <div class="pay-method-icon">🔵</div>
+          <div class="pay-method-name">支付宝</div>
+          <small style="color:#6c757d;font-size:11px;">Alipay</small>
+        </div>
+        <div class="pay-method" data-pay="crypto" onclick="selectPay(this,'crypto')">
+          <div class="pay-method-icon">₿</div>
+          <div class="pay-method-name">Crypto</div>
+          <small style="color:#6c757d;font-size:11px;">USDT/BTC/ETH</small>
+        </div>
+      </div>
+    </div>
+
+    <div id="payExtra"></div>
+
+    <div class="cart-total" id="checkoutSummary"></div>
+    <p class="pay-note">🔒 所有支付均通过加密通道处理 · All payments processed via secure encrypted channel</p>
+    <button class="btn-primary" onclick="placeOrder()" data-key="placeOrder">✅ 确认下单 Place Order</button>
+  </div>
+</div>
+
+<!-- Order Success Modal -->
+<div class="overlay" id="successModal">
+  <div class="modal" style="text-align:center;">
+    <div class="success-icon">🎉</div>
+    <div class="success-title" data-key="successTitle">订单已提交！Order Placed!</div>
+    <p class="success-sub" data-key="successSub">感谢您的购买，我们将尽快处理您的订单<br>Thank you for your purchase. We'll process your order shortly.</p>
+    <div class="order-info" id="orderSummary"></div>
+    <button class="btn-primary" onclick="closeAll()" style="margin-top:16px;" data-key="continueShopping">继续购物 Continue Shopping</button>
+  </div>
+</div>
+
+<!-- Admin Modal -->
+<div class="overlay" id="adminModal">
+  <div class="modal admin-modal">
+    <button class="modal-close" onclick="closeModal('adminModal')">✕</button>
+    <h2>⚙️ 商家后台 Admin Panel</h2>
+
+    <!-- 登录区（未登录时显示）：真实的 Supabase 账号密码登录，不是前端假密码 -->
+    <div id="adminLoginView">
+      <p style="color:#6c757d;font-size:13px;margin-bottom:16px;">请使用管理员账号登录 · Sign in with your admin account</p>
+      <div class="form-group">
+        <label class="form-label">邮箱 Email</label>
+        <input class="form-input" id="adminEmail" type="email" placeholder="admin@yourdomain.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">密码 Password</label>
+        <input class="form-input" id="adminPassword" type="password" placeholder="••••••••">
+      </div>
+      <button class="btn-primary" onclick="adminSignIn()">🔐 登录 Sign In</button>
+      <p style="color:#999;font-size:12px;margin-top:10px;">管理员账号需要先在 Supabase 后台的 Authentication 里手动创建，见部署指南。</p>
+    </div>
+
+    <!-- 面板区（登录成功后显示） -->
+    <div id="adminPanelView" style="display:none;">
+    <div style="text-align:right;margin-bottom:8px;">
+      <button class="admin-tab" style="color:#999;" onclick="adminSignOut()">🚪 退出登录 Sign Out</button>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchAdminTab(this,'tabDashboard')">📊 数据概览</button>
+      <button class="admin-tab" onclick="switchAdminTab(this,'tabProducts')">📦 商品管理</button>
+      <button class="admin-tab" onclick="switchAdminTab(this,'tabOrders')">📋 订单管理</button>
+      <button class="admin-tab" onclick="switchAdminTab(this,'tabAdd')">➕ 发布商品</button>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="tabDashboard">
+      <div class="stat-cards">
+        <div class="stat-card"><div class="stat-num" id="statOrders">0</div><div class="stat-label">订单数 Orders</div></div>
+        <div class="stat-card"><div class="stat-num" id="statRevenue">$0</div><div class="stat-label">总收入 Revenue</div></div>
+        <div class="stat-card"><div class="stat-num" id="statProducts">0</div><div class="stat-label">商品数 Products</div></div>
+      </div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:12px;">最近订单 Recent Orders</div>
+      <div class="orders-list" id="dashOrders"></div>
+    </div>
+
+    <!-- Products -->
+    <div id="tabProducts" style="display:none;">
+      <table class="product-table">
+        <thead><tr><th>图标</th><th>商品名</th><th>价格</th><th>库存</th><th>操作</th></tr></thead>
+        <tbody id="adminProductList"></tbody>
+      </table>
+    </div>
+
+    <!-- Orders -->
+    <div id="tabOrders" style="display:none;">
+      <div class="orders-list" id="adminOrderList"></div>
+    </div>
+
+    <!-- Add Product -->
+    <div id="tabAdd" style="display:none;">
+      <div class="form-group">
+        <label class="form-label">商品名称（中文）*</label>
+        <input class="form-input" id="newName" placeholder="例：无线蓝牙耳机">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Product Name (English) *</label>
+        <input class="form-input" id="newNameEn" placeholder="e.g. Wireless Bluetooth Earbuds">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Название товара (Русский)</label>
+        <input class="form-input" id="newNameRu" placeholder="напр. Беспроводные наушники">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">价格 Price (USD) *</label>
+          <input class="form-input" id="newPrice" type="number" placeholder="29.99">
+        </div>
+        <div class="form-group">
+          <label class="form-label">库存 Stock</label>
+          <input class="form-input" id="newStock" type="number" placeholder="100">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">分类 Category</label>
+        <select class="select-input" id="newCategory">
+          <option>电子数码</option><option>服装配饰</option><option>家居生活</option>
+          <option>美妆个护</option><option>运动户外</option><option>食品生鲜</option><option>其他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">图标 Emoji</label>
+        <input class="form-input" id="newEmoji" placeholder="例：📱 💻 👗 🏠">
+      </div>
+      <div class="form-group">
+        <label class="form-label">商品描述 Description</label>
+        <textarea class="textarea-input" id="newDesc" placeholder="描述商品特点、规格、用途..."></textarea>
+      </div>
+      <button class="btn-primary" onclick="addProduct()">✅ 发布商品 Publish Product</button>
+    </div>
+    </div><!-- /adminPanelView -->
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- Supabase 客户端库（浏览器直接用CDN，不需要本地npm install） -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ========== 后端配置（改成你自己的 Supabase 项目信息） ==========
+// SUPABASE_ANON_KEY 是"公开匿名key"，设计上就是可以放在前端的，
+// 真正的权限控制在后端的 RLS 策略和 security definer 函数里，不靠隐藏这个 key。
+const SUPABASE_URL = 'https://ddqhzdraugjtlsuoihpo.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_FYcP4FloIC7ukfaEc4kcYw_QhExoIRz';
+const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ========== SECURITY HELPERS ==========
+// 任何来自用户输入或商品数据（哪怕是后台录入）的内容，只要要用 innerHTML 渲染，
+// 一律先转义，防止 XSS（存储型/反射型脚本注入）。
+function escapeHtml(value) {
+  if (value === null || value === undefined) return '';
+  return String(value).replace(/[&<>"'`=\/]/g, function (ch) {
+    return {
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;',
+      "'": '&#39;', '`': '&#96;', '=': '&#61;', '/': '&#47;'
+    }[ch];
+  });
+}
+
+// 金额一律用"分"（整数）计算，避免浮点数精度误差（如 0.1+0.2 !== 0.3），
+// 展示时再换算回元。
+function toCents(amount) { return Math.round(Number(amount) * 100); }
+function fromCents(cents) { return (cents / 100).toFixed(2); }
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// 解析 localStorage 数据时做容错，防止数据被篡改或损坏后整站白屏
+function safeParse(raw, fallback) {
+  if (!raw) return fallback;
+  try {
+    return JSON.parse(raw);
+  } catch (e) {
+    console.warn('本地数据解析失败，已重置', e);
+    return fallback;
+  }
+}
+
+// ========== STATE ==========
+let lang = 'zh';
+let cart = safeParse(localStorage.getItem('gm_cart'), []); // 购物车仍然是本地的"选购意向"，不涉及金额结算安全
+let products = []; // 商品数据从 Supabase 加载，不再是本地假数据
+let adminOrders = []; // 管理员登录后从 Supabase 拉取的真实订单
+let selectedPayMethod = 'stripe';
+let currentProduct = null;
+let currentQty = 1;
+let currentCategory = '全部';
+let editingProductId = null;
+
+// 从 Supabase 拉取商品列表（所有访客都能读，见 schema.sql 的 RLS 策略）
+async function loadProducts() {
+  const { data, error } = await supa.from('products').select('*').order('created_at', { ascending: true });
+  if (error) {
+    console.error('加载商品失败', error);
+    showToast('⚠️ 商品加载失败，请检查网络或 Supabase 配置');
+    return;
+  }
+  products = data.map(p => ({ ...p, nameEn: p.name_en, nameRu: p.name_ru, desc: p.description, price: Number(p.price) }));
+  renderCategories();
+  renderProducts();
+}
+
+function saveCart() {
+  localStorage.setItem('gm_cart', JSON.stringify(cart));
+}
+
+// ========== CATEGORY TRANSLATIONS ==========
+// 分类的规范值（存储/筛选用）始终是中文；这里只负责"显示文案"按语言切换。
+// 后台新增商品时的分类下拉框选项也从这里生成，避免中英文分类值不一致。
+const categoryMap = {
+  '全部':     { zh: '全部',     en: 'All',                      ru: 'Все' },
+  '电子数码': { zh: '电子数码', en: 'Electronics',              ru: 'Электроника' },
+  '服装配饰': { zh: '服装配饰', en: 'Clothing & Accessories',   ru: 'Одежда и аксессуары' },
+  '家居生活': { zh: '家居生活', en: 'Home & Living',            ru: 'Дом и быт' },
+  '美妆个护': { zh: '美妆个护', en: 'Beauty & Personal Care',   ru: 'Красота и уход' },
+  '运动户外': { zh: '运动户外', en: 'Sports & Outdoor',         ru: 'Спорт и отдых' },
+  '食品生鲜': { zh: '食品生鲜', en: 'Food & Grocery',           ru: 'Продукты питания' },
+  '其他':     { zh: '其他',     en: 'Others',                   ru: 'Разное' }
+};
+function categoryLabel(cat) {
+  return (categoryMap[cat] && categoryMap[cat][lang]) || cat;
+}
+
+// 三语言场景下，商品名只显示"当前选中语言"这一个，不再像双语版那样中英同时显示。
+// 如果某个商品还没填俄语名（比如老数据），退回显示英文名，再退回中文名。
+function productName(p) {
+  if (lang === 'ru') return p.nameRu || p.nameEn || p.name;
+  if (lang === 'en') return p.nameEn || p.name;
+  return p.name;
+}
+
+// ========== TRANSLATIONS ==========
+const i18n = {
+  zh: { heroTitle: '全球好货 · <span style="color:#f5a623">直达您手</span>', heroSub: '正品保障 · 全球配送 · 多种支付方式 · 7天无理由退换<br>Authentic goods · Global shipping · Multiple payment methods', featuredTitle: '🔥 热门商品 Featured Products', admin: '管理', cart: '购物车', cartTitle: '🛒 购物车', checkoutTitle: '📦 填写订单', receiver: '收件人', email: '邮箱', phone: '手机', address: '收货地址', payMethod: '支付方式', placeOrder: '✅ 确认下单 Place Order', successTitle: '订单已提交！', successSub: '感谢您的购买，我们将尽快处理您的订单', continueShopping: '继续购物', payTitle: '安全支付方式 · Secure Payment Methods', qty: '数量:', addCart: '🛒 加入购物车', buyNow: '⚡ 立即购买', checkout: '去结账 →' },
+  en: { heroTitle: 'Global Goods · <span style="color:#f5a623">Delivered to You</span>', heroSub: 'Authentic · Worldwide Shipping · Multiple Payment Methods · 7-Day Returns', featuredTitle: '🔥 Featured Products', admin: 'Admin', cart: 'Cart', cartTitle: '🛒 Shopping Cart', checkoutTitle: '📦 Checkout', receiver: 'Receiver / 收件人', email: 'Email', phone: 'Phone', address: 'Shipping Address', payMethod: 'Payment Method', placeOrder: '✅ Place Order', successTitle: 'Order Placed!', successSub: 'Thank you for your purchase. We\'ll process your order shortly.', continueShopping: 'Continue Shopping', payTitle: 'Secure Payment Methods', qty: 'Qty:', addCart: '🛒 Add to Cart', buyNow: '⚡ Buy Now', checkout: 'Checkout →' },
+  ru: { heroTitle: 'Товары со всего мира · <span style="color:#f5a623">прямо к вам</span>', heroSub: 'Гарантия подлинности · Доставка по всему миру · Разные способы оплаты · Возврат в течение 7 дней', featuredTitle: '🔥 Популярные товары', admin: 'Админ', cart: 'Корзина', cartTitle: '🛒 Корзина покупок', checkoutTitle: '📦 Оформление заказа', receiver: 'Получатель', email: 'Эл. почта', phone: 'Телефон', address: 'Адрес доставки', payMethod: 'Способ оплаты', placeOrder: '✅ Оформить заказ', successTitle: 'Заказ оформлен!', successSub: 'Спасибо за покупку. Мы скоро обработаем ваш заказ.', continueShopping: 'Продолжить покупки', payTitle: 'Безопасные способы оплаты', qty: 'Кол-во:', addCart: '🛒 В корзину', buyNow: '⚡ Купить сейчас', checkout: 'Оформить →' }
+};
+
+// 语言循环顺序 + 每种语言按钮上显示"切换到"的文字（用目标语言自己的文字写，不是当前语言）
+const LANG_CYCLE = ['zh', 'en', 'ru'];
+const LANG_BTN_LABEL = { zh: '中文', en: 'EN', ru: 'РУ' };
+
+function toggleLang() {
+  const nextIndex = (LANG_CYCLE.indexOf(lang) + 1) % LANG_CYCLE.length;
+  lang = LANG_CYCLE[nextIndex];
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.getAttribute('data-key');
+    if (i18n[lang][k]) el.innerHTML = i18n[lang][k];
+  });
+  const placeholders = {
+    zh: '搜索商品 / Search products...',
+    en: 'Search products...',
+    ru: 'Поиск товаров...'
+  };
+  document.getElementById('searchInput').placeholder = placeholders[lang];
+  // 按钮显示"下一个可切换到的语言"，用那门语言自己的写法
+  const followingLang = LANG_CYCLE[(nextIndex + 1) % LANG_CYCLE.length];
+  document.getElementById('langBtn').textContent = LANG_BTN_LABEL[followingLang];
+  renderCategories();
+  renderProducts();
+}
+
+// ========== CATEGORIES ==========
+function renderCategories() {
+  const cats = ['全部', ...new Set(products.map(p => p.category))];
+  const container = document.getElementById('categories');
+  container.innerHTML = cats.map(c => {
+    const safeCat = escapeHtml(c);
+    const label = escapeHtml(categoryLabel(c));
+    return `<button class="cat-btn ${c === currentCategory ? 'active' : ''}" onclick="selectCategory('${safeCat}')">${label}</button>`;
+  }).join('');
+}
+
+function selectCategory(cat) {
+  currentCategory = cat;
+  renderCategories();
+  renderProducts();
+}
+
+// ========== PRODUCTS ==========
+function renderProducts() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  let filtered = products.filter(p => {
+    const matchCat = currentCategory === '全部' || p.category === currentCategory;
+    const matchQuery = !query || p.name.toLowerCase().includes(query) || p.nameEn.toLowerCase().includes(query) || (p.nameRu && p.nameRu.toLowerCase().includes(query));
+    return matchCat && matchQuery;
+  });
+
+  const stockWord = { zh: '库存', en: 'Stock', ru: 'Наличие' }[lang];
+  const soldOutWord = { zh: '已售罄', en: 'Sold out', ru: 'Нет в наличии' }[lang];
+  const addCartWord = { zh: '+购物车', en: '+ Cart', ru: '+ Корзина' }[lang];
+
+  document.getElementById('productGrid').innerHTML = filtered.map(p => {
+    const inCartQty = cart.filter(i => i.id === p.id).length;
+    const remaining = p.stock - inCartQty;
+    const stockLabel = `${stockWord}: ${remaining}`;
+    const soldOut = remaining <= 0;
+    return `
+    <div class="product-card" onclick="openProduct('${p.id}')">
+      <div class="product-img">${escapeHtml(p.emoji)}</div>
+      <div class="product-info">
+        ${p.badge ? `<span class="product-badge ${p.stock < 50 ? 'stock-low' : ''}">${escapeHtml(p.badge)}</span>` : ''}
+        <div class="rating">${'★'.repeat(Math.floor(p.rating))}${'☆'.repeat(5-Math.floor(p.rating))} ${p.rating}</div>
+        <div class="product-name">${escapeHtml(productName(p))}</div>
+        <div class="product-meta">
+          <div class="product-price">$${p.price.toFixed(2)}<small>${stockLabel}</small></div>
+          <button class="add-cart" ${soldOut ? 'disabled style="opacity:.5;cursor:not-allowed;"' : ''} onclick="event.stopPropagation();quickAdd('${p.id}')">${soldOut ? soldOutWord : addCartWord}</button>
+        </div>
+      </div>
+    </div>
+  `;
+  }).join('') || `<div style="grid-column:1/-1;text-align:center;padding:40px;color:#999;">${{zh:'暂无商品',en:'No products found',ru:'Товары не найдены'}[lang]}</div>`;
+}
+
+function filterProducts() { renderProducts(); }
+
+function quickAdd(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  const inCartQty = cart.filter(i => i.id === id).length;
+  if (inCartQty >= p.stock) { showToast('⚠️ 库存不足 Out of stock'); return; }
+  cart.push({ ...p, qty: 1, cartId: Date.now() + Math.random() });
+  saveCart();
+  updateCartCount();
+  renderProducts();
+  showToast(`✅ ${p.name} 已加入购物车`);
+}
+
+// ========== PRODUCT DETAIL ==========
+function openProduct(id) {
+  currentProduct = products.find(p => p.id === id);
+  currentQty = 1;
+  if (!currentProduct) return;
+  document.getElementById('modalEmoji').textContent = currentProduct.emoji;
+  document.getElementById('modalName').textContent = productName(currentProduct);
+  const others = LANG_CYCLE.filter(l => l !== lang)
+    .map(l => (l === 'ru' ? currentProduct.nameRu : l === 'en' ? currentProduct.nameEn : currentProduct.name))
+    .filter(Boolean);
+  document.getElementById('modalNameEn').textContent = others.join(' · ');
+  document.getElementById('modalPrice').textContent = `$${currentProduct.price.toFixed(2)}`;
+  document.getElementById('modalDesc').textContent = currentProduct.desc;
+  document.getElementById('qtyDisplay').textContent = 1;
+  document.getElementById('modalBadge').innerHTML = currentProduct.badge ? `<span class="product-badge">${escapeHtml(currentProduct.badge)}</span>` : '';
+  openModal('productModal');
+}
+
+function changeQty(d) {
+  if (!currentProduct) return;
+  const inCartQty = cart.filter(i => i.id === currentProduct.id).length;
+  const maxAddable = Math.max(0, currentProduct.stock - inCartQty);
+  currentQty = Math.min(Math.max(1, currentQty + d), Math.max(1, maxAddable));
+  document.getElementById('qtyDisplay').textContent = currentQty;
+}
+
+function addToCartFromModal() {
+  if (!currentProduct) return;
+  const inCartQty = cart.filter(i => i.id === currentProduct.id).length;
+  const maxAddable = currentProduct.stock - inCartQty;
+  if (maxAddable <= 0) { showToast('⚠️ 库存不足 Out of stock'); return; }
+  const qtyToAdd = Math.min(currentQty, maxAddable);
+  for (let i = 0; i < qtyToAdd; i++) cart.push({ ...currentProduct, qty: 1, cartId: Date.now() + i + Math.random() });
+  saveCart();
+  updateCartCount();
+  renderProducts();
+  closeModal('productModal');
+  showToast(`✅ 已加入购物车 x${qtyToAdd}`);
+}
+
+function buyNow() {
+  addToCartFromModal();
+  openCart();
+}
+
+// ========== CART ==========
+function updateCartCount() {
+  document.getElementById('cartCount').textContent = cart.length;
+}
+
+function openCart() {
+  renderCart();
+  openModal('cartModal');
+}
+
+function renderCart() {
+  if (cart.length === 0) {
+    document.getElementById('cartItems').innerHTML = '<div style="text-align:center;padding:30px;color:#999;">购物车是空的 Cart is empty 🛒</div>';
+    document.getElementById('cartTotal').innerHTML = '';
+    return;
+  }
+
+  // Aggregate by product id
+  const agg = {};
+  cart.forEach(item => {
+    if (!agg[item.id]) agg[item.id] = { ...item, qty: 0 };
+    agg[item.id].qty++;
+  });
+
+  document.getElementById('cartItems').innerHTML = Object.values(agg).map(item => {
+    const lineCents = toCents(item.price) * item.qty;
+    return `
+    <div class="cart-item">
+      <div class="cart-item-img">${escapeHtml(item.emoji)}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${escapeHtml(productName(item))}</div>
+        <div class="cart-item-price">$${item.price.toFixed(2)} × ${item.qty} = $${fromCents(lineCents)}</div>
+        <div class="cart-qty-ctrl">
+          <button class="cart-qty-btn" onclick="changeCartQty('${item.id}',-1)">−</button>
+          <span>${item.qty}</span>
+          <button class="cart-qty-btn" onclick="changeCartQty('${item.id}',1)">+</button>
+        </div>
+      </div>
+      <button class="cart-item-remove" onclick="removeFromCart('${item.id}')">🗑</button>
+    </div>
+  `;
+  }).join('');
+
+  const { subtotalCents, shippingCents, totalCents } = computeCartTotals();
+  const subtotal = subtotalCents / 100, shipping = shippingCents / 100, total = totalCents / 100;
+
+  document.getElementById('cartTotal').innerHTML = `
+    <div class="cart-total-row"><span>小计 Subtotal</span><span>$${fromCents(subtotalCents)}</span></div>
+    <div class="cart-total-row"><span>运费 Shipping</span><span>${shippingCents === 0 ? '🎉 免运费 Free' : '$' + fromCents(shippingCents)}</span></div>
+    ${subtotal > 0 && subtotal < 50 ? `<div style="font-size:12px;color:#6c757d;">再购 $${(50 - subtotal).toFixed(2)} 即可免运费 · Add $${(50 - subtotal).toFixed(2)} for free shipping</div>` : ''}
+    <div class="cart-total-final"><span>合计 Total</span><span style="color:#e94560;">$${fromCents(totalCents)}</span></div>
+  `;
+}
+
+// 统一的金额计算入口，全站以分为单位计算，避免浮点误差
+function computeCartTotals() {
+  const subtotalCents = cart.reduce((s, i) => s + toCents(i.price), 0);
+  const shippingCents = subtotalCents > 5000 ? 0 : 499;
+  const totalCents = subtotalCents + shippingCents;
+  return { subtotalCents, shippingCents, totalCents };
+}
+
+function changeCartQty(id, d) {
+  if (d > 0) {
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+    const inCartQty = cart.filter(x => x.id === id).length;
+    if (inCartQty >= p.stock) { showToast('⚠️ 库存不足 Out of stock'); return; }
+    cart.push({ ...p, qty: 1, cartId: Date.now() + Math.random() });
+  } else {
+    const idx = cart.findLastIndex ? cart.findLastIndex(x => x.id === id)
+      : (() => { for (let i = cart.length - 1; i >= 0; i--) if (cart[i].id === id) return i; return -1; })();
+    if (idx >= 0) cart.splice(idx, 1);
+  }
+  saveCart();
+  updateCartCount();
+  renderCart();
+  renderProducts();
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(x => x.id !== id);
+  saveCart();
+  updateCartCount();
+  renderCart();
+}
+
+// ========== CHECKOUT ==========
+function openCheckout() {
+  if (cart.length === 0) { showToast('购物车是空的！'); return; }
+  closeModal('cartModal');
+  renderCheckoutSummary();
+  openModal('checkoutModal');
+}
+
+function renderCheckoutSummary() {
+  const { subtotalCents, shippingCents, totalCents } = computeCartTotals();
+  document.getElementById('checkoutSummary').innerHTML = `
+    <div class="cart-total-row"><span>商品合计</span><span>$${fromCents(subtotalCents)}</span></div>
+    <div class="cart-total-row"><span>运费</span><span>${shippingCents === 0 ? '免费' : '$' + fromCents(shippingCents)}</span></div>
+    <div class="cart-total-final"><span>应付合计</span><span style="color:#e94560;">$${fromCents(totalCents)}</span></div>
+  `;
+}
+
+function selectPay(el, method) {
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPayMethod = method;
+  renderPayExtra(method);
+}
+
+function renderPayExtra(method) {
+  const extras = {
+    stripe: `<div style="background:#e8fbf0;border-radius:8px;padding:14px;margin-bottom:12px;font-size:13px;text-align:center;">💳 点击"确认下单"后将跳转到 Stripe 官方收银台安全输入卡号<br><small style="color:#555;">测试模式可用测试卡 4242 4242 4242 4242，任意未来日期/CVV</small></div>`,
+    paypal: `<div style="background:#e8f0fe;border-radius:8px;padding:14px;margin-bottom:12px;font-size:13px;text-align:center;">🅿️ 订单会先记录到数据库（待支付），PayPal 网关尚待接入<br><small style="color:#555;">接入方法见部署指南，和 Stripe 是同一套模式</small></div>`,
+    alipay: `<div style="background:#e6f3ff;border-radius:8px;padding:14px;margin-bottom:12px;font-size:13px;text-align:center;">🔵 订单会先记录到数据库（待支付），支付宝网关尚待接入<br><small style="color:#555;">接入方法见部署指南，和 Stripe 是同一套模式</small></div>`,
+    crypto: `<div class="form-group"><label class="form-label">选择币种 Select Coin</label><select class="select-input"><option>USDT (TRC20)</option><option>USDT (ERC20)</option><option>BTC</option><option>ETH</option></select></div><div style="background:#fff8e8;border-radius:8px;padding:14px;margin-bottom:12px;font-size:13px;">₿ 订单会先记录到数据库（待支付），加密货币网关尚待接入<br><small style="color:#888;">接入方法见部署指南，和 Stripe 是同一套模式</small></div>`
+  };
+  document.getElementById('payExtra').innerHTML = extras[method] || '';
+}
+
+async function placeOrder() {
+  if (cart.length === 0) { showToast('⚠️ 购物车是空的 Cart is empty'); return; }
+
+  const name = document.getElementById('receiverName').value.trim();
+  const email = document.getElementById('receiverEmail').value.trim();
+  const addr = document.getElementById('receiverAddr').value.trim();
+  const city = document.getElementById('receiverCity').value.trim();
+  const zip = document.getElementById('receiverZip').value.trim();
+  const phone = document.getElementById('receiverPhone').value.trim();
+
+  if (!name || !email || !addr) { showToast('⚠️ 请填写必要信息 Please fill in required fields'); return; }
+  if (!isValidEmail(email)) { showToast('⚠️ 邮箱格式不正确 Invalid email format'); return; }
+  if (name.length > 100 || addr.length > 300) { showToast('⚠️ 输入内容过长 Input too long'); return; }
+
+  const orderId = 'GM' + Date.now().toString().slice(-8);
+  const rpcItems = Object.values(
+    cart.reduce((acc, item) => {
+      acc[item.id] = acc[item.id] || { id: item.id, qty: 0 };
+      acc[item.id].qty++;
+      return acc;
+    }, {})
+  );
+
+  const placeBtn = document.querySelector('#checkoutModal .btn-primary');
+  if (placeBtn) { placeBtn.disabled = true; placeBtn.textContent = '处理中... Processing...'; }
+
+  // 真正的价格计算、库存校验与扣减全部在数据库的 place_order() 函数里原子完成，
+  // 前端传的只是"商品id + 数量"，价格由服务端按数据库当前价格重新计算，
+  // 杜绝有人改浏览器里的 JS 变量伪造更低总价。
+  const { data, error } = await supa.rpc('place_order', {
+    p_order_id: orderId,
+    p_name: name,
+    p_email: email,
+    p_phone: phone,
+    p_addr: addr,
+    p_city: city,
+    p_zip: zip,
+    p_items: rpcItems,
+    p_pay_method: selectedPayMethod
+  });
+
+  if (placeBtn) { placeBtn.disabled = false; placeBtn.textContent = '✅ 确认下单 Place Order'; }
+
+  if (error) {
+    console.error('place_order error:', error);
+    const msg = (error.message || '').includes('insufficient_stock')
+      ? '⚠️ 部分商品库存不足，请返回购物车调整数量 Insufficient stock'
+      : (error.message || '').includes('invalid_email')
+        ? '⚠️ 邮箱格式不正确 Invalid email'
+        : '⚠️ 下单失败，请稍后重试 Order failed, please retry';
+    showToast(msg);
+    return;
+  }
+
+  const { access_token, total_cents } = data;
+  cart = [];
+  saveCart();
+  updateCartCount();
+  closeModal('checkoutModal');
+
+  if (selectedPayMethod === 'stripe') {
+    // 真实接入：调用服务端接口创建 Stripe Checkout 会话，跳转到 Stripe 托管的收银台完成付款。
+    // 密钥全程只在服务端（Vercel 环境变量）出现，浏览器和这段代码里都看不到。
+    try {
+      const resp = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          order_id: orderId,
+          access_token,
+          total_cents,
+          email,
+          site_url: window.location.origin
+        })
+      });
+      const sessionData = await resp.json();
+      if (!resp.ok || !sessionData.url) throw new Error(sessionData.error || 'checkout_session_failed');
+      window.location.href = sessionData.url; // 跳转到 Stripe 收银台，付款结果由 webhook 异步确认
+      return;
+    } catch (err) {
+      console.error('Stripe checkout error:', err);
+      showToast('⚠️ 支付跳转失败，请检查后端配置 Payment redirect failed');
+      return;
+    }
+  }
+
+  // PayPal / 支付宝 / 加密货币：订单已经真实写入数据库（多用户共享，不再是 localStorage 假数据），
+  // 但还没有接入对应网关的服务端 webhook 确认支付，所以先展示"待确认"状态。
+  // 接入方法和 Stripe 完全一样的模式：写一个创建支付会话的接口 + 一个验证 webhook 的接口即可。
+  renderOrderSuccess({ orderId, name, email, totalCents: total_cents, payMethod: selectedPayMethod, verified: false });
+  openModal('successModal');
+}
+
+function renderOrderSuccess({ orderId, name, email, totalCents, payMethod, verified }) {
+  document.getElementById('orderSummary').innerHTML = `
+    <div class="order-row"><span>订单号 Order ID</span><span><strong>${escapeHtml(orderId)}</strong></span></div>
+    <div class="order-row"><span>支付方式</span><span>${escapeHtml(String(payMethod).toUpperCase())}</span></div>
+    <div class="order-row"><span>收件人</span><span>${escapeHtml(name)}</span></div>
+    <div class="order-row"><span>邮箱</span><span>${escapeHtml(email)}</span></div>
+    <div class="order-row"><span>金额 Amount</span><span style="color:#e94560;font-weight:700;">$${fromCents(totalCents)}</span></div>
+    <div class="order-row"><span>状态</span><span style="color:${verified ? '#28a745' : '#f5a623'};">${verified ? '✅ 已支付 Paid' : '⏳ 待支付确认 Awaiting payment confirmation'}</span></div>
+  `;
+}
+
+// Stripe 付款完成后会跳转回本页面并带上 order_id / token / paid=1，
+// 这里轮询 get_order_status()（凭 token 查询，不需要登录）等 webhook 把状态写成 paid。
+async function handleReturnFromPayment() {
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get('order_id');
+  const token = params.get('token');
+  if (!orderId || !token) return;
+
+  if (params.get('canceled') === '1') {
+    showToast('支付已取消 Payment canceled');
+    history.replaceState(null, '', window.location.pathname);
+    return;
+  }
+
+  let attempts = 0;
+  const poll = async () => {
+    attempts++;
+    const { data, error } = await supa.rpc('get_order_status', { p_order_id: orderId, p_token: token });
+    if (error) { console.error(error); return; }
+    if (data && data.status === 'paid') {
+      renderOrderSuccess({
+        orderId: data.id, name: data.name, email: '', totalCents: data.total_cents,
+        payMethod: data.pay_method, verified: true
+      });
+      openModal('successModal');
+      history.replaceState(null, '', window.location.pathname);
+      return;
+    }
+    if (attempts < 8) setTimeout(poll, 1500); // webhook 通常几秒内到达，最多轮询约12秒
+  };
+  poll();
+}
+
+// ========== ADMIN ==========
+// 真正的权限控制现在在服务端：Supabase 的 RLS 策略要求"已登录"才能写商品表/读订单表，
+// 这里的登录是真实账号密码校验（supa.auth.signInWithPassword），不是前端写死密码。
+async function openAdmin() {
+  openModal('adminModal');
+  const { data: { session } } = await supa.auth.getSession();
+  if (session) {
+    await showAdminPanel();
+  } else {
+    document.getElementById('adminLoginView').style.display = '';
+    document.getElementById('adminPanelView').style.display = 'none';
+  }
+}
+
+async function adminSignIn() {
+  const email = document.getElementById('adminEmail').value.trim();
+  const password = document.getElementById('adminPassword').value;
+  if (!email || !password) { showToast('⚠️ 请输入邮箱和密码'); return; }
+
+  const { error } = await supa.auth.signInWithPassword({ email, password });
+  if (error) {
+    showToast('⚠️ 登录失败：' + (error.message.includes('Invalid') ? '账号或密码错误' : '请稍后重试'));
+    return;
+  }
+  document.getElementById('adminPassword').value = '';
+  await showAdminPanel();
+}
+
+async function adminSignOut() {
+  await supa.auth.signOut();
+  document.getElementById('adminLoginView').style.display = '';
+  document.getElementById('adminPanelView').style.display = 'none';
+}
+
+async function showAdminPanel() {
+  document.getElementById('adminLoginView').style.display = 'none';
+  document.getElementById('adminPanelView').style.display = '';
+  await Promise.all([updateAdminStats(), renderAdminProducts()]);
+}
+
+function switchAdminTab(el, tabId) {
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  ['tabDashboard','tabProducts','tabOrders','tabAdd'].forEach(t => {
+    document.getElementById(t).style.display = t === tabId ? '' : 'none';
+  });
+  if (tabId === 'tabDashboard') updateAdminStats();
+  if (tabId === 'tabProducts') renderAdminProducts();
+  if (tabId === 'tabOrders') renderAdminOrders();
+}
+
+// 拉取真实订单（要求已登录，见 schema.sql 里 orders 表的 RLS 策略）
+async function loadAdminOrders() {
+  const { data, error } = await supa.from('orders').select('*').order('created_at', { ascending: false });
+  if (error) {
+    console.error('加载订单失败', error);
+    showToast('⚠️ 订单加载失败');
+    return [];
+  }
+  return data;
+}
+
+async function updateAdminStats() {
+  adminOrders = await loadAdminOrders();
+  document.getElementById('statOrders').textContent = adminOrders.length;
+  const revenueCents = adminOrders.filter(o => o.status === 'paid').reduce((s, o) => s + Number(o.total_cents), 0);
+  document.getElementById('statRevenue').textContent = '$' + fromCents(revenueCents);
+  document.getElementById('statProducts').textContent = products.length;
+  document.getElementById('dashOrders').innerHTML = adminOrders.slice(0,5).map(o => `
+    <div class="order-item">
+      <div><strong>${escapeHtml(o.id)}</strong><br><span style="color:#999;font-size:12px;">${escapeHtml(o.name)} · ${escapeHtml(new Date(o.created_at).toLocaleString())}</span></div>
+      <div style="text-align:right"><strong style="color:#e94560;">$${fromCents(o.total_cents)}</strong><br><span class="order-status status-${o.status === 'paid' ? 'paid' : 'pending'}">${o.status === 'paid' ? '✅ 已支付' : (o.status === 'failed' || o.status === 'canceled' ? '❌ ' + o.status : '⏳ 待支付')}</span></div>
+    </div>
+  `).join('') || '<div style="color:#999;padding:20px;text-align:center;">暂无订单</div>';
+}
+
+async function renderAdminProducts() {
+  document.getElementById('adminProductList').innerHTML = products.map(p => `
+    <tr>
+      <td style="font-size:24px">${escapeHtml(p.emoji)}</td>
+      <td><strong>${escapeHtml(p.name)}</strong><br><small style="color:#999">${escapeHtml(p.nameEn)}</small><br><small style="color:#999">${escapeHtml(p.nameRu || '(未填俄语名)')}</small></td>
+      <td>$${p.price.toFixed(2)}</td>
+      <td>${p.stock}</td>
+      <td><button class="edit-btn" onclick="editProduct('${p.id}')">编辑</button><button class="del-btn" onclick="deleteProduct('${p.id}')">删除</button></td>
+    </tr>
+  `).join('');
+}
+
+async function renderAdminOrders() {
+  adminOrders = await loadAdminOrders();
+  document.getElementById('adminOrderList').innerHTML = adminOrders.map(o => `
+    <div class="order-item">
+      <div>
+        <strong>${escapeHtml(o.id)}</strong> · ${escapeHtml(String(o.pay_method).toUpperCase())}
+        <br><span style="font-size:12px;color:#999;">${escapeHtml(o.name)} | ${escapeHtml(o.email)} | ${escapeHtml(new Date(o.created_at).toLocaleString())}</span>
+      </div>
+      <div style="text-align:right"><strong style="color:#e94560;">$${fromCents(o.total_cents)}</strong><br><span class="order-status status-${o.status === 'paid' ? 'paid' : 'pending'}">${o.status === 'paid' ? '✅ 已支付' : (o.status === 'failed' || o.status === 'canceled' ? '❌ ' + o.status : '⏳ 待支付')}</span></div>
+    </div>
+  `).join('') || '<div style="color:#999;padding:20px;text-align:center;">暂无订单</div>';
+}
+
+async function addProduct() {
+  const name = document.getElementById('newName').value.trim();
+  const nameEn = document.getElementById('newNameEn').value.trim();
+  const nameRu = document.getElementById('newNameRu').value.trim().slice(0, 100);
+  const price = parseFloat(document.getElementById('newPrice').value);
+  const stockRaw = parseInt(document.getElementById('newStock').value, 10);
+  const stock = Number.isFinite(stockRaw) && stockRaw >= 0 ? stockRaw : 100;
+  const category = document.getElementById('newCategory').value;
+  const emoji = (document.getElementById('newEmoji').value.trim() || '📦').slice(0, 8);
+  const desc = document.getElementById('newDesc').value.trim().slice(0, 1000);
+
+  if (!name || !nameEn) { showToast('⚠️ 请填写商品名称 Please fill in product name'); return; }
+  if (name.length > 100 || nameEn.length > 100) { showToast('⚠️ 名称过长 Name too long'); return; }
+  if (!Number.isFinite(price) || price <= 0 || price > 1000000) { showToast('⚠️ 价格必须是大于0的数字 Price must be a positive number'); return; }
+
+  // 俄语名称选填——如果留空，前台俄语模式会自动回退显示英文名（见 productName() 函数）
+  const row = { name, name_en: nameEn, name_ru: nameRu || null, price, stock, category, emoji, description: desc };
+
+  let error;
+  if (editingProductId) {
+    ({ error } = await supa.from('products').update(row).eq('id', editingProductId));
+    editingProductId = null;
+  } else {
+    ({ error } = await supa.from('products').insert({ ...row, badge: '', rating: 5.0 }));
+  }
+
+  if (error) {
+    console.error(error);
+    showToast('⚠️ 保存失败，请确认已登录管理员账号 Save failed — are you signed in?');
+    return;
+  }
+
+  await loadProducts();
+  await renderAdminProducts();
+  ['newName','newNameEn','newNameRu','newPrice','newStock','newEmoji','newDesc'].forEach(id => document.getElementById(id).value = '');
+  showToast('✅ 商品已发布！Product published!');
+}
+
+function editProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  editingProductId = id;
+  document.getElementById('newName').value = p.name;
+  document.getElementById('newNameEn').value = p.nameEn;
+  document.getElementById('newNameRu').value = p.nameRu || '';
+  document.getElementById('newPrice').value = p.price;
+  document.getElementById('newStock').value = p.stock;
+  document.getElementById('newCategory').value = p.category;
+  document.getElementById('newEmoji').value = p.emoji;
+  document.getElementById('newDesc').value = p.desc || '';
+  document.querySelectorAll('.admin-tab')[3].click();
+  showToast('📝 编辑模式 Edit mode');
+}
+
+async function deleteProduct(id) {
+  if (!confirm('确认删除该商品？')) return;
+  const { error } = await supa.from('products').delete().eq('id', id);
+  if (error) {
+    console.error(error);
+    showToast('⚠️ 删除失败，请确认已登录管理员账号');
+    return;
+  }
+  await loadProducts();
+  await renderAdminProducts();
+  showToast('🗑 商品已删除');
+}
+
+// ========== MODAL HELPERS ==========
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeAll() {
+  ['productModal','cartModal','checkoutModal','successModal','adminModal'].forEach(id => closeModal(id));
+}
+
+document.querySelectorAll('.overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+
+// ========== TOAST ==========
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ========== INIT ==========
+loadProducts(); // 异步从 Supabase 拉取商品，完成后内部会自己调用 renderCategories/renderProducts
+updateCartCount();
+renderPayExtra('stripe');
+handleReturnFromPayment(); // 检查是不是从 Stripe 付款页跳转回来的
+</script>
+</body>
+</html>
