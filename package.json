@@ -2,6 +2,7 @@
   "name": "globalmart",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "GlobalMart cross-border shop - Vercel serverless functions for Stripe payment verification",
   "dependencies": {
     "stripe": "^16.0.0",
