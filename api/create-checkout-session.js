@@ -2,32 +2,31 @@
 // 前端在调用完 Supabase 的 place_order() 拿到 order_id / access_token / total_cents 之后，
 // 把这几个值传给这个接口，由服务端创建 Stripe Checkout 会话并返回跳转链接。
 // Stripe 密钥只存在于这里（Vercel 环境变量），永远不会出现在浏览器里。
+//
+// 同样改用 Web 标准 Request/Response 写法，和 stripe-webhook.js 保持一致。
 
-const Stripe = require('stripe');
+import Stripe from 'stripe';
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-module.exports = async (req, res) => {
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'method_not_allowed' });
-    return;
+export default async function handler(request) {
+  if (request.method !== 'POST') {
+    return Response.json({ error: 'method_not_allowed' }, { status: 405 });
   }
 
   try {
-    const { order_id, access_token, total_cents, email, site_url } = req.body || {};
+    const body = await request.json();
+    const { order_id, access_token, total_cents, email, site_url } = body || {};
 
     if (!order_id || !access_token || !total_cents || !email) {
-      res.status(400).json({ error: 'missing_fields' });
-      return;
+      return Response.json({ error: 'missing_fields' }, { status: 400 });
     }
     if (!Number.isInteger(total_cents) || total_cents <= 0) {
-      res.status(400).json({ error: 'invalid_amount' });
-      return;
+      return Response.json({ error: 'invalid_amount' }, { status: 400 });
     }
 
     const baseUrl = site_url || process.env.PUBLIC_SITE_URL;
     if (!baseUrl) {
-      res.status(500).json({ error: 'missing_site_url_config' });
-      return;
+      return Response.json({ error: 'missing_site_url_config' }, { status: 500 });
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -50,9 +49,9 @@ module.exports = async (req, res) => {
       cancel_url: `${baseUrl}/?order_id=${encodeURIComponent(order_id)}&token=${encodeURIComponent(access_token)}&canceled=1`
     });
 
-    res.status(200).json({ url: session.url });
+    return Response.json({ url: session.url });
   } catch (err) {
     console.error('create-checkout-session error:', err);
-    res.status(500).json({ error: 'stripe_error' });
+    return Response.json({ error: 'stripe_error' }, { status: 500 });
   }
-};
+}
